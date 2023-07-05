@@ -8,7 +8,8 @@ def home(request):
     return render(request, "home.html")
 
 def gerenciar(request):
-    return render(request, "gerenciar.html")
+    contas = Conta.objects.all()
+    return render(request, 'gerenciar.html', {'contas': contas,})
 
 def cadastrar_banco(request):
     apelido = request.POST.get('apelido')
@@ -30,6 +31,6 @@ def cadastrar_banco(request):
     )
 
     conta.save()
-    
+
     messages.add_message(request, constants.SUCCESS, 'Conta cadastrada com sucesso!')
     return redirect('/perfil/gerenciar/')
