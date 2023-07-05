@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import Conta
+from django.contrib import messages
+from django.contrib.messages import constants
 
 def home(request):
     return render(request, "home.html")
@@ -16,6 +18,7 @@ def cadastrar_banco(request):
     icone = request.FILES.get('icone')
     
     if len(apelido.strip()) == 0 or len(valor.strip()) == 0:
+        messages.add_message(request, constants.ERROR, 'Preencha todos os campos!')
         return redirect('/perfil/gerenciar/')
     
     conta = Conta(
@@ -27,5 +30,6 @@ def cadastrar_banco(request):
     )
 
     conta.save()
-
+    
+    messages.add_message(request, constants.SUCCESS, 'Conta cadastrada com sucesso!')
     return redirect('/perfil/gerenciar/')
