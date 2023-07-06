@@ -58,13 +58,13 @@
                     <span class="fonte-destaque">Suas contas</span>
 
                     <div class="div-contas">
-                        
+                        {% for conta in contas%}
                             <div class="lista-conta">
-                                <span>Nubank</span>
-                                <span class="total-conta">R$ 3.000,00</span>
+                                <span>{{conta.apelido}}</span>
+                                <span class="total-conta">R$ {{conta.valor}}</span>
                             </div>
                             <br>
-                        
+                        {%endfor%}
                         
                         
                     </div>
