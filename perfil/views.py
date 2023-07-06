@@ -3,17 +3,17 @@ from django.http import HttpResponse
 from .models import Conta, Categoria
 from django.contrib import messages
 from django.contrib.messages import constants
+from .utils import calcula_total
 
 def home(request):
     contas = Conta.objects.all()
-    return render(request, "home.html", {'contas': contas})
+    total_contas = calcula_total(contas, 'valor')
+    return render(request, "home.html", {'contas': contas, 'total_contas': total_contas})
 
 def gerenciar(request):
     contas = Conta.objects.all()
-    total_contas = 0
+    total_contas = calcula_total(contas, 'valor')
     categorias = Categoria.objects.all()
-    for conta in contas:
-        total_contas += conta.valor
     return render(request, 'gerenciar.html', {'contas': contas, 'total_contas': total_contas, 'categorias': categorias})
 
 def cadastrar_banco(request):
