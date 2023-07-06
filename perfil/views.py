@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .models import Conta
+from .models import Conta, Categoria
 from django.contrib import messages
 from django.contrib.messages import constants
 
@@ -25,6 +25,8 @@ def cadastrar_banco(request):
         messages.add_message(request, constants.ERROR, 'Preencha todos os campos!')
         return redirect('/perfil/gerenciar/')
     
+    #TODO: REALIZAR MAIS VALIDAÇÕES
+
     conta = Conta(
         apelido = apelido,
         banco=banco,
@@ -43,4 +45,20 @@ def deletar_banco(request, id):
     conta.delete()
     
     messages.add_message(request, constants.SUCCESS, 'Conta removida com sucesso')
+    return redirect('/perfil/gerenciar/')
+
+def cadastrar_categoria(request):
+    nome = request.POST.get('categoria')
+    essencial = bool(request.POST.get('essencial'))
+
+#TODO: FAZER VALIDAÇÕES SE O NOME FOI PREENCHIDO E SE O ESSENCIAL UM DADO BOOLEANO
+
+    categoria = Categoria(
+        categoria=nome,
+        essencial=essencial
+    )
+
+    categoria.save()
+
+    messages.add_message(request, constants.SUCCESS, 'Categoria cadastrada com sucesso')
     return redirect('/perfil/gerenciar/')
