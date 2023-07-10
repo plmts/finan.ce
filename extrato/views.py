@@ -1,3 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from perfil.models import Categoria, Conta
 
-# Create your views here.
+def novo_valor(request):
+    if request.method == 'GET':
+        contas = Conta.objects.all()
+        return render(request, 'novo_valor.html')
