@@ -1,11 +1,15 @@
 from django.shortcuts import render, redirect
 from perfil.models import Categoria, Conta
-from django.http import HttpResponse
+from django.http import HttpResponse, FileResponse
 from .models import Valores
 from django.contrib import messages
 from django.contrib.messages import constants
 from datetime import datetime
-
+from django.template.loader import render_to_string # converter código em html
+import os
+from django.conf import settings
+from weasyprint import HTML #converter html para pdf
+from io import BytesIO #salvar em memória ao invés de salvar no disco
 
 def novo_valor(request):
     if request.method == 'GET':
@@ -61,3 +65,15 @@ def view_extrato(request):
     # TODO: FILTRAR POR PERÍODO DE TEMPO (parecido com os outros filtros já feitos)
 
     return render(request, 'view_extrato.html', {'valores': valores, 'contas': contas, 'categorias': categorias})
+
+def exportar_pdf(request):
+    valores = Valores.objects.filter(data__month=datetime.now().month)
+
+    path_template = os.path.join(settings.BASE_DIR, 'templates/partials/extrato.html')
+    template_render = render_to_string(path_template, {'valores':valores}) #converte os dados para html
+
+    path_output = BytesIO()
+    HTML(string=template_render).write_pdf(path_output) #salva o pdf na memória
+    path_output.seek(0)
+
+    return FileResponse(path_output, filename='extrato.pdf')
